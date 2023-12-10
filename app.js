@@ -15,8 +15,13 @@ app.use(bodyParser.urlencoded({extended: false}))
 //     next() // Allows the request to continue to the next middleware in line
 // })
 
-app.use(adminRouter)
+app.use('/admin',adminRouter)
 
 app.use(shopRouter)
+
+
+app.use((req,res,next)=>{
+    res.status(404).send('<h1>Page Not Found</h1>')
+})
 
 app.listen(3000)
