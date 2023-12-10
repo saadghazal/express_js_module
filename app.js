@@ -9,6 +9,11 @@ const shopRouter = require('./routes/shop')
 
 //it register a middleware it will parse the incoming requests bodies
 app.use(bodyParser.urlencoded({extended: false}))
+
+
+app.use(express.static(path.join(__dirname,'public')))// it will access static files that should be included in the html pages for example like a css files
+
+
 // use allows us to add a new middleware function 
 // it accepts an array of request handlers
 // app.use((req,res,next)=>{
