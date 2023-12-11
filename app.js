@@ -3,6 +3,22 @@ const path = require('path')
 const bodyParser = require('body-parser')
 
 const app = express()
+
+app.set('view engine','pug')
+app.set('views','views')
+/*
+allows us to any values globally on out express application
+to set custom configuration to our express app to behave differently
+
+***** View Engine *****
+Allows us to tell express for any dynamic templates we're trying to render
+please use this engine
+
+***** Views *****
+Allows us to tell express where to find these dynamic views
+
+*/
+
 const adminRouter = require('./routes/admin')
 const shopRouter = require('./routes/shop')
 
@@ -21,7 +37,7 @@ app.use(express.static(path.join(__dirname,'public')))// it will access static f
 //     next() // Allows the request to continue to the next middleware in line
 // })
 
-app.use('/admin',adminRouter)
+app.use('/admin',adminRouter.routes)
 
 app.use(shopRouter)
 
