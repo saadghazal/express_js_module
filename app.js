@@ -1,10 +1,12 @@
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
+const ex_bars = require('express-handlebars') 
 
 const app = express()
 
-app.set('view engine','pug')
+app.engine('handlebars',ex_bars())
+app.set('view engine','handlebars')
 app.set('views','views')
 /*
 allows us to any values globally on out express application
