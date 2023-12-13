@@ -1,19 +1,11 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-const ex_bars = require("express-handlebars");
 
 const app = express();
 
-app.engine(
-  "hbs",
-  ex_bars({
-    layoutsDir: "views/layouts/",
-    defaultLayout: "main-layout",
-    extname: "hbs",
-  }),
-);
-app.set("view engine", "hbs");
+
+app.set("view engine", "ejs");
 app.set("views", "views");
 /*
 allows us to any values globally on out express application
