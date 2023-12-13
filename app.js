@@ -1,13 +1,20 @@
-const express = require('express')
-const path = require('path')
-const bodyParser = require('body-parser')
-const ex_bars = require('express-handlebars') 
+const express = require("express");
+const path = require("path");
+const bodyParser = require("body-parser");
+const ex_bars = require("express-handlebars");
 
-const app = express()
+const app = express();
 
-app.engine('hbs',ex_bars())
-app.set('view engine','hbs')
-app.set('views','views')
+app.engine(
+  "hbs",
+  ex_bars({
+    layoutsDir: "views/layouts/",
+    defaultLayout: "main-layout",
+    extname: "hbs",
+  }),
+);
+app.set("view engine", "hbs");
+app.set("views", "views");
 /*
 allows us to any values globally on out express application
 to set custom configuration to our express app to behave differently
@@ -21,32 +28,27 @@ Allows us to tell express where to find these dynamic views
 
 */
 
-const adminRouter = require('./routes/admin')
-const shopRouter = require('./routes/shop')
-
+const adminRouter = require("./routes/admin");
+const shopRouter = require("./routes/shop");
 
 //it register a middleware it will parse the incoming requests bodies
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(express.static(path.join(__dirname, "public"))); // it will access static files that should be included in the html pages for example like a css files
 
-app.use(express.static(path.join(__dirname,'public')))// it will access static files that should be included in the html pages for example like a css files
-
-
-// use allows us to add a new middleware function 
+// use allows us to add a new middleware function
 // it accepts an array of request handlers
 // app.use((req,res,next)=>{
 //     console.log("In The Middleware")
 //     next() // Allows the request to continue to the next middleware in line
 // })
 
-app.use('/admin',adminRouter.routes)
+app.use("/admin", adminRouter.routes);
 
-app.use(shopRouter)
+app.use(shopRouter);
 
+app.use((req, res, next) => {
+  res.status(404).render("404", { pageTitle: "Page Not Found" });
+});
 
-app.use((req,res,next)=>{
-
-    res.status(404).render('404',{pageTitle:'Page Not Found'})
-})
-
-app.listen(3000)
+app.listen(3000);
