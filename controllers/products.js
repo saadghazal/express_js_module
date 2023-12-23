@@ -15,14 +15,17 @@ module.exports.postAddProduct = (req, res) => {
     res.redirect("/");
   }
 module.exports.getProducts = (req, res, next) => {
-    let products = Product.fetchAll()
-    // we can pass the data that we could use in our view
-    res.render("shop", {
-      products_list: products,
-      pageTitle: "Shop",
-      path: "/",
-      hasProducts: products.length > 0,
-      activeShop: true,
-      productCSS: true,
-    });
+        // we can pass the data that we could use in our view
+
+    Product.fetchAll((products)=>{
+        res.render("shop", {
+            products_list: products,
+            pageTitle: "Shop",
+            path: "/",
+            hasProducts: products.length > 0,
+            activeShop: true,
+            productCSS: true,
+          });
+    })
+    
   }
