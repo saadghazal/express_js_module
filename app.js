@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
+const errorController = require('./controllers/error')
 
 const app = express();
 
@@ -39,8 +40,6 @@ app.use("/admin", adminRouter);
 
 app.use(shopRouter);
 
-app.use((req, res, next) => {
-  res.status(404).render("404", { pageTitle: "Page Not Found" ,path: ""});
-});
+app.use(errorController.error404);
 
 app.listen(3000);
