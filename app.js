@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, "public"))); // it will access stati
 //     next() // Allows the request to continue to the next middleware in line
 // })
 
-app.use("/admin", adminRouter.routes);
+app.use("/admin", adminRouter);
 
 app.use(shopRouter);
 
