@@ -1,7 +1,7 @@
 const Product = require('../models/product')
 
 module.exports.getAddProduct = (req, res, next) => {
-  res.render("add-product", {
+  res.render("admin/add-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     formsCSS: true,
@@ -18,7 +18,7 @@ module.exports.getProducts = (req, res, next) => {
         // we can pass the data that we could use in our view
 
     Product.fetchAll((products)=>{
-        res.render("shop", {
+        res.render("shop/product-list", {
             products_list: products,
             pageTitle: "Shop",
             path: "/",
