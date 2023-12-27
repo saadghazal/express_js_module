@@ -36,3 +36,9 @@ module.exports.getCheckout = (req,res,next)=>{
     pageTitle: "Checkout"
   })
 }
+module.exports.getOrders = (req,res,next)=>{
+  res.render("shop/orders",{
+    path: '/orders',
+    pageTitle: 'Your Orders'
+  })
+}
