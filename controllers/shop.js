@@ -13,6 +13,23 @@ module.exports.getProducts = (req, res, next) => {
     })
     
   }
+ 
+module.exports.getProduct = (req, res, next) => {
+  const productId = req.params.productId;
+  console.log(productId);
+  res.redirect('/');
+    // Product.findById(productId, (product) => {
+    //     if (!product) {
+    //         return res.status(404).render("404", { pageTitle: "Page Not Found" ,path: ""});
+    //     }
+    //     res.render("shop/product-detail", {
+    //         product: product,
+    //         pageTitle: product.title,
+    //         path: "/products",
+    //       });
+    // });
+
+}
 module.exports.getIndex = (req,res,next)=>{
   Product.fetchAll((products)=>{
     res.render("shop/index", {
