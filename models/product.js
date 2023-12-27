@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { get } = require("http");
 const path = require("path");
 const p = path.join(
     path.dirname(require.main.filename),
@@ -34,5 +35,11 @@ module.exports = class Product {
   }
   static fetchAll(callBack) {
     getProductFromFile(callBack)
+  }
+  static findById(id, callBack) {
+    getProductFromFile(products => {
+      const product = products.find(p=> p.id === id);
+      callBack(product);
+    })
   }
 };
