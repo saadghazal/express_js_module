@@ -39,6 +39,12 @@ module.exports.getCart = (req,res,next)=>{
   })
 }
 
+module.exports.postCart = (req,res,next)=>{
+  Product.findById(req.body.productId, (product)=>{
+    console.log(product)
+  })
+}
+
 module.exports.getCheckout = (req,res,next)=>{
   res.render('shop/checkout',{
     path: '/checkout',
