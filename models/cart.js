@@ -4,6 +4,11 @@ const path = require("path");
 const p = path.join(path.dirname(require.main.filename), "data", "cart.json");
 
 module.exports = class Cart {
+  /**
+   * Adds a product to the cart or updates the quantity if it already exists.
+   * Reads the cart data from the JSON file, checks if the product exists,
+   * updates the cart object accordingly, writes the updated cart back to the file.
+   */
   static addProduct(id, productPrice) {
     // fetch all products from file
     fs.readFile(p, (err, fileContent) => {
@@ -32,7 +37,7 @@ module.exports = class Cart {
       cart.totalPrice += +productPrice;
       fs.writeFile(p, JSON.stringify(cart), (err) => {
         console.log(err);
-      })
+      });
     });
   }
 };
