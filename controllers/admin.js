@@ -59,16 +59,29 @@ module.exports.postAddProduct = (req, res) => {
       })
      
     };
-    module.exports.postEditProduct = (req, res, next) => {
-      const newTitle = req.body.title;
-      const newImageUrl = req.body.imageUrl;
-      const newPrice = req.body.price;
-      const newDescription = req.body.description;
-      const newProductId = req.body.productId;
-      let product = new Product(newProductId,newTitle, newImageUrl, newDescription, newPrice);
-      product.save();
-      res.redirect("/admin/products");
-    }
+/**
+ * Handles editing an existing product.
+ *
+ * Extracts the updated product data from the request body,
+ * creates a new Product instance, saves it, then redirects
+ * to the admin products page.
+ */
+module.exports.postEditProduct = (req, res, next) => {
+  const newTitle = req.body.title;
+  const newImageUrl = req.body.imageUrl;
+  const newPrice = req.body.price;
+  const newDescription = req.body.description;
+  const newProductId = req.body.productId;
+  let product = new Product(
+    newProductId,
+    newTitle,
+    newImageUrl,
+    newDescription,
+    newPrice,
+  );
+  product.save();
+  res.redirect("/admin/products");
+};
 
 /**
  * Exports a function that retrieves all products from the data store
@@ -86,3 +99,11 @@ module.exports.getProducts = (req, res, next) => {
     });
   });
 };
+
+module.exports.postDeleteProduct =(req,res,next)=>{
+  const productId = req.body.productId;
+  Product.deleteById(productId)
+  res.redirect('/admin/products')
+
+}
+

@@ -25,7 +25,6 @@ module.exports = class Product {
     this.price = price
   }
   save() {
-    
     getProductFromFile(products => {
       if(this.id){
         const existingProductIndex = products.findIndex(p=> p.id === this.id);
@@ -52,6 +51,14 @@ module.exports = class Product {
     getProductFromFile(products => {
       const product = products.find(p=> p.id === id);
       callBack(product);
+    })
+  }
+  static deleteById(id) {
+    getProductFromFile(products => {
+     const updatedProducts = products.filter(p => p.id !== id);
+     fs.writeFile(p,JSON.stringify(updatedProducts),(err)=>{
+      console.log(err);
+     })
     })
   }
 };
