@@ -40,4 +40,28 @@ module.exports = class Cart {
       });
     });
   }
+  static removeProduct(id,productPrice){
+    fs.readFile(p,(err,fileContent)=>{
+      if(!err){
+        let cart = JSON.parse(fileContent);
+        let updatedProducts = [...cart.products]
+        let productIndex = updatedProducts.findIndex(p => p.id === id);
+        
+        let productToDelete = updatedProducts[productIndex];
+        productToDelete.quantity--;
+        if(productToDelete.quantity === 0){
+          updatedProducts = updatedProducts.filter(p => p.id !== id);
+        }
+        cart.totalPrice -= productPrice * productToDelete.quantity;
+        cart.products = updatedProducts;
+
+        fs.writeFile(p, JSON.stringify(cart), (err) => {
+          console.log(err);
+        });
+
+      }else{
+        return;
+      }
+    })
+  }
 };
