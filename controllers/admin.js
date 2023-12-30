@@ -27,7 +27,7 @@ module.exports.postAddProduct = (req, res) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  let product = new Product(title, imageUrl, description, price);
+  let product = new Product(null,title, imageUrl, description, price);
   product.save();
   res.redirect("/");
 };
@@ -59,7 +59,16 @@ module.exports.postAddProduct = (req, res) => {
       })
      
     };
-    module.exports.postEditProduct = (req, res, next) => {}
+    module.exports.postEditProduct = (req, res, next) => {
+      const newTitle = req.body.title;
+      const newImageUrl = req.body.imageUrl;
+      const newPrice = req.body.price;
+      const newDescription = req.body.description;
+      const newProductId = req.body.productId;
+      let product = new Product(newProductId,newTitle, newImageUrl, newDescription, newPrice);
+      product.save();
+      res.redirect("/admin/products");
+    }
 
 /**
  * Exports a function that retrieves all products from the data store
