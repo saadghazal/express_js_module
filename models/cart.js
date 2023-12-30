@@ -64,4 +64,16 @@ module.exports = class Cart {
       }
     })
   }
+  static getCart(callBack){
+    fs.readFile(p,(err,fileContent)=>{
+      if(!err){
+        let cart = JSON.parse(fileContent)
+         callBack(cart);
+      }else{
+        
+         callBack(null);
+      }
+    })
+
+  }
 };

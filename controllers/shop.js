@@ -45,10 +45,41 @@ module.exports.getIndex = (req,res,next)=>{
  * passing the cart data and page metadata.
  */
 module.exports.getCart = (req, res, next) => {
-  res.render("shop/cart", {
-    path: "/cart",
-    pageTitle: "Your Cart",
-  });
+  Cart.getCart(cart => {
+     Product.fetchAll((products)=>{
+      const cartProducts = []
+      products.forEach(product => {
+        const cartProduct = cart.products.find(prod => prod.id == product.id);
+        // if the product is in the cart, add it to the cartProducts array
+        if(cartProduct){
+          cartProducts.push({productData: product,quantity:cartProduct.quantity});
+        }
+      })
+      console.log(cartProducts)
+      res.render("shop/cart", { 
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: cartProducts
+      });
+     })
+      // Product.fetchAll(products =>{
+      //   const cartProducts = []
+      //   for(let product in products){
+      //     const cartProduct = cart.products.find(prod => prod.id == product.id);
+      //     // if the product is in the cart, add it to the cartProducts array
+      //     if(cartProduct){
+      //       cartProducts.push({productData: cartProduct,quantity:cartProduct.quantity});
+      //     }
+      //   }
+      //   res.render("shop/cart", {
+      //     path: "/cart",
+      //     pageTitle: "Your Cart",
+      //     products: cartProducts
+      //   });
+      // })
+
+  })
+  
 };
 
 module.exports.postCart = (req,res,next)=>{
