@@ -45,9 +45,10 @@ module.exports = class Cart {
       if(!err){
         let cart = JSON.parse(fileContent);
         let updatedProducts = [...cart.products]
-        let productIndex = updatedProducts.findIndex(p => p.id === id);
-        
-        let productToDelete = updatedProducts[productIndex];
+        let productToDelete = updatedProducts.find(p => p.id === id);
+        if(!productToDelete){
+          return; 
+        }
         productToDelete.quantity--;
         if(productToDelete.quantity === 0){
           updatedProducts = updatedProducts.filter(p => p.id !== id);
