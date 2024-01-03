@@ -28,8 +28,12 @@ module.exports.postAddProduct = (req, res) => {
   const price = req.body.price;
   const description = req.body.description;
   let product = new Product(null,title, imageUrl, description, price);
-  product.save();
-  res.redirect("/");
+  product.save().then(()=>{
+    res.redirect("/");
+  }).catch(err=>{
+    console.log(err)
+  });
+  
 };
 /**
  * Exports a function that renders the edit product page.

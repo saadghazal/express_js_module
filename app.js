@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const errorController = require('./controllers/error')
+const mysqlDB = require('./util/sql_database')
 
 const app = express();
 

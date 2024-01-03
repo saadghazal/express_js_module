@@ -11,13 +11,18 @@ const Cart = require('../models/cart')
 module.exports.getProducts = (req, res, next) => {
   // we can pass the data that we could use in our view
 
-  Product.fetchAll((products) => {
-    res.render("shop/product-list", {
-      products_list: products,
-      pageTitle: "All Products",
-      path: "/products",
-    });
+  Product.fetchAll().then(
+    ([rows,fieldData]) =>{
+      res.render('shop/product-list',{
+        products_list:rows,
+        pageTitle:'All Products',
+        path:'/products'
+      })
+    }
+  ).catch(err=>{
+    console.log(err)
   });
+ 
 };
  
 module.exports.getProduct = (req, res, next) => {
@@ -29,14 +34,18 @@ module.exports.getProduct = (req, res, next) => {
 
 }
 module.exports.getIndex = (req,res,next)=>{
-  Product.fetchAll((products)=>{
-    res.render("shop/index", {
-        products_list: products,
-        pageTitle: "Shop",
-        path: "/",
+  Product.fetchAll().then(
+    ([rows,fieldData]) =>{
+      res.render('shop/index',{
+        products_list:rows,
+        pageTitle:'Shop',
+        path:'/'
+      })
+    }
+  ).catch(err=>{
+    console.log(err)
+  });
 
-      });
-})
 }
 /**
  * Renders the cart view.
