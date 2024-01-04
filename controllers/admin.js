@@ -17,24 +17,27 @@ module.exports.getAddProduct = (req, res, next) => {
   });
 };
 
+
 /**
  * Handles adding a new product.
  *
  * Extracts the new product data from the request body,
- * creates a new Product instance with it, saves to DB,
- * then redirects to the homepage on success or logs
- * any errors.
+ * creates a new Product instance with it, saves it
+ * to the database, and handles any errors.
  */
 module.exports.postAddProduct = (req, res) => {
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  let product = new Product(null, title, imageUrl, description, price);
-  product
-    .save()
-    .then(() => {
-      res.redirect("/");
+  Product.create({
+    title: title,
+    description: description,
+    price: price,
+    imageUrl: imageUrl,
+  })
+    .then((result) => {
+      console.log(result);
     })
     .catch((err) => {
       console.log(err);

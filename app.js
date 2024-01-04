@@ -43,10 +43,17 @@ app.use(shopRouter);
 
 app.use(errorController.error404);
 
-sequelize.sync().then(result=>{
+/**
+ * Connects to the database using Sequelize and starts the Express app listening on port 3000.
+ * On success, starts the app listening on port 3000.
+ * On error, logs the error.
+ */
+sequelize
+  .sync()
+  .then((result) => {
     app.listen(3000);
-
-}).catch(err => {
-    console.log(err)
-})
+  })
+  .catch((err) => {
+    console.log(err);
+  })
 
