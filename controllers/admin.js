@@ -18,13 +18,7 @@ module.exports.getAddProduct = (req, res, next) => {
 };
 
 
-/**
- * Handles adding a new product.
- *
- * Extracts the new product data from the request body,
- * creates a new Product instance with it, saves it
- * to the database, and handles any errors.
- */
+
 module.exports.postAddProduct = (req, res) => {
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
@@ -44,13 +38,7 @@ module.exports.postAddProduct = (req, res) => {
       console.log(err);
     });
 };
-/**
- * Exports a function that renders the edit product page.
- * It first checks if edit mode is enabled via the query parameter.
- * If not, it redirects to the homepage.
- * Otherwise it retrieves the product by ID and renders the edit page,
- * passing the product data and edit mode status.
- */
+
 
     module.exports.getEditProduct = (req, res, next) => {
       const editMode = req.query.edit;
@@ -58,7 +46,7 @@ module.exports.postAddProduct = (req, res) => {
         return res.redirect("/")
       }
       const productId = req.params.productId;
-      Product.findById(productId, (product)=>{
+      Product.findByPk(productId).then(product =>{
         if(!product){
           return res.redirect("/")
         }
@@ -69,47 +57,44 @@ module.exports.postAddProduct = (req, res) => {
             product: product,
 
           });
+      }).catch(err=>{
+        console.log(err)
       })
      
     };
-/**
- * Handles editing an existing product.
- *
- * Extracts the updated product data from the request body,
- * creates a new Product instance, saves it, then redirects
- * to the admin products page.
- */
+
 module.exports.postEditProduct = (req, res, next) => {
+  const productId = req.body.productId;
   const newTitle = req.body.title;
   const newImageUrl = req.body.imageUrl;
   const newPrice = req.body.price;
   const newDescription = req.body.description;
-  const newProductId = req.body.productId;
-  let product = new Product(
-    newProductId,
-    newTitle,
-    newImageUrl,
-    newDescription,
-    newPrice,
-  );
-  product.save();
-  res.redirect("/admin/products");
+  Product.findByPk(productId).then(product =>{
+    return product.update({
+      title: newTitle,
+      price: newPrice,
+      description: newDescription,
+      imageUrl: newImageUrl,
+    })
+    .then(result =>{
+      console.log("UPDATED PRODUCT");
+      res.redirect("/admin/products");
+    })
+  }).catch(err=>{
+    console.log(err)
+  })
+  
 };
 
-/**
- * Exports a function that retrieves all products from the data store
- * and renders the admin products page.
- *
- * It calls the Product.fetchAll method to get all products,
- * then renders the admin/products view, passing the products list.
- */
 module.exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product.findAll().then(products => {
     res.render("admin/products", {
       products_list: products,
       pageTitle: "Admin Products",
       path: "/admin/products",
     });
+  }).catch(err =>{
+    console.log(err)
   });
 };
 
