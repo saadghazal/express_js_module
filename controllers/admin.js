@@ -16,24 +16,29 @@ module.exports.getAddProduct = (req, res, next) => {
     editing: false
   });
 };
+
 /**
- * Handles saving a new product to the file.
+ * Handles adding a new product.
  *
- * @param {object} req - Express request object
- * @param {object} res - Express response object
+ * Extracts the new product data from the request body,
+ * creates a new Product instance with it, saves to DB,
+ * then redirects to the homepage on success or logs
+ * any errors.
  */
 module.exports.postAddProduct = (req, res) => {
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  let product = new Product(null,title, imageUrl, description, price);
-  product.save().then(()=>{
-    res.redirect("/");
-  }).catch(err=>{
-    console.log(err)
-  });
-  
+  let product = new Product(null, title, imageUrl, description, price);
+  product
+    .save()
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 /**
  * Exports a function that renders the edit product page.
