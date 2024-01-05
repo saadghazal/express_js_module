@@ -90,9 +90,7 @@ sequelize
     }
     return Promise.resolve(user);
   })
-  .then((user) => {
-    return user.createCart();
-  }).then((cart) => {
+  .then((cart) => {
     app.listen(3000);
 
   })
