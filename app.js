@@ -76,8 +76,8 @@ Product.belongsToMany(Cart, { through: CartItem });
  * On error, logs the error.
  */
 sequelize
-  .sync({ force: true })
-  // .sync()
+  // .sync({ force: true })
+  .sync()
   .then((result) => {
     return User.findByPk(1);
   })
