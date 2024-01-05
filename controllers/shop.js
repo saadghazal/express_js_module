@@ -123,10 +123,31 @@ module.exports.getOrders = (req, res, next) => {
     pageTitle: "Your Orders",
   });
 };
+/**
+ * Deletes a product from the user's cart.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ *
+ * The productId is extracted from the request body.
+ * The user's cart is fetched and the product with the matching id is retrieved.
+ * The product is removed from the cart and the cart is saved.
+ * Finally, a response is sent to redirect to the /cart route.
+ */
 module.exports.postCartDeleteProduct = (req, res, next) => {
   const productId = req.body.productId;
-  Product.findById(productId, (product) => {
-    Cart.removeProduct(productId, product.price);
-    res.redirect("/cart");
-  });
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts({ where: { id: productId } });
+    })
+    .then((products) => {
+      const product = products[0];
+      return product.CartItem.destroy({ where: { productId: productId } });
+    })
+    .then((result) => {
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
 };
