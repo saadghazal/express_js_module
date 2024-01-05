@@ -1,80 +1,12 @@
-const fs = require("fs");
-const path = require("path");
-
-const p = path.join(path.dirname(require.main.filename), "data", "cart.json");
-
-module.exports = class Cart {
-  /**
-   * Adds a product to the cart or updates the quantity if it already exists.
-   * Reads the cart data from the JSON file, checks if the product exists,
-   * updates the cart object accordingly, writes the updated cart back to the file.
-   */
-  static addProduct(id, productPrice) {
-    // fetch all products from file
-    fs.readFile(p, (err, fileContent) => {
-      let cart = { products: [], totalPrice: 0 };
-      if (!err) {
-        cart = JSON.parse(fileContent);
-      }
-      // find existing product
-      const existingProductIndex = cart.products.findIndex(
-        (prod) => prod.id === id,
-      );
-      const existingProduct = cart.products[existingProductIndex];
-      let updatedProduct;
-
-      if (existingProduct) {
-        // update existing product
-        updatedProduct = { ...existingProduct };
-        updatedProduct.quantity++;
-        cart.products = [...cart.products];
-        cart.products[existingProductIndex] = updatedProduct;
-      } else {
-        // add new product
-        updatedProduct = { id: id, quantity: 1 };
-        cart.products = [...cart.products, updatedProduct];
-      }
-      cart.totalPrice += +productPrice;
-      fs.writeFile(p, JSON.stringify(cart), (err) => {
-        console.log(err);
-      });
-    });
+const Sequelize = require("sequelize");
+const sequelize = require("../util/sql_database");
+const Cart = sequelize.define("Cart", {
+  id:{
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
   }
-  static removeProduct(id,productPrice){
-    fs.readFile(p,(err,fileContent)=>{
-      if(!err){
-        let cart = JSON.parse(fileContent);
-        let updatedProducts = [...cart.products]
-        let productToDelete = updatedProducts.find(p => p.id === id);
-        if(!productToDelete){
-          return; 
-        }
-        productToDelete.quantity--;
-        if(productToDelete.quantity === 0){
-          updatedProducts = updatedProducts.filter(p => p.id !== id);
-        }
-        cart.totalPrice -= productPrice * productToDelete.quantity;
-        cart.products = updatedProducts;
+})
 
-        fs.writeFile(p, JSON.stringify(cart), (err) => {
-          console.log(err);
-        });
-
-      }else{
-        return;
-      }
-    })
-  }
-  static getCart(callBack){
-    fs.readFile(p,(err,fileContent)=>{
-      if(!err){
-        let cart = JSON.parse(fileContent)
-         callBack(cart);
-      }else{
-        
-         callBack(null);
-      }
-    })
-
-  }
-};
+module.exports = Cart;

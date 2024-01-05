@@ -5,6 +5,8 @@ const errorController = require("./controllers/error");
 const sequelize = require("./util/sql_database");
 const Product = require("./models/product");
 const User = require("./models/user");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 const app = express();
 
@@ -25,6 +27,7 @@ Allows us to tell express where to find these dynamic views
 
 const adminRouter = require("./routes/admin");
 const shopRouter = require("./routes/shop");
+
 
 //it register a middleware it will parse the incoming requests bodies
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -62,6 +65,10 @@ app.use(errorController.error404);
  */
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 /**
  * Connects to the database using Sequelize and starts the Express app listening on port 3000.
@@ -69,8 +76,8 @@ User.hasMany(Product);
  * On error, logs the error.
  */
 sequelize
-  // .sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then((result) => {
     return User.findByPk(1);
   })
