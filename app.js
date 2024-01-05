@@ -1,13 +1,12 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-const errorController = require('./controllers/error')
-const sequelize = require('./util/sql_database')
-const Product = require('./models/product')
-const User = require('./models/user')
+const errorController = require("./controllers/error");
+const sequelize = require("./util/sql_database");
+const Product = require("./models/product");
+const User = require("./models/user");
 
 const app = express();
-
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -39,14 +38,30 @@ app.use(express.static(path.join(__dirname, "public"))); // it will access stati
 //     next() // Allows the request to continue to the next middleware in line
 // })
 
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 app.use("/admin", adminRouter);
 
 app.use(shopRouter);
 
 app.use(errorController.error404);
 
-Product.belongsTo(User,{constraints:true,onDelete:'CASCADE'})
-User.hasMany(Product)
+/**
+ * Sets up a one-to-many relationship between the Product and User models.
+ * The Product model belongs to a User - a product will have a userId field that references the User it belongs to.
+ * The User model has many Products - deleting a User will also delete all their associated Products due to the CASCADE option.
+ */
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
 
 /**
  * Connects to the database using Sequelize and starts the Express app listening on port 3000.
@@ -54,11 +69,23 @@ User.hasMany(Product)
  * On error, logs the error.
  */
 sequelize
-  .sync({ force: true })
+  // .sync({ force: true })
+  .sync()
   .then((result) => {
+    return User.findByPk(1);
+  })
+  .then((user) => {
+    if (!user) {
+      return User.create({
+        name: "Max",
+        email: "a@b.c",
+      });
+    }
+    return Promise.resolve(user);
+  })
+  .then((user) => {
     app.listen(3000);
   })
   .catch((err) => {
     console.log(err);
-  })
-
+  });
