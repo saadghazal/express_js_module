@@ -27,12 +27,11 @@ module.exports.postAddProduct = (req, res) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  Product.create({
+  req.user.createProduct({
     title: title,
     description: description,
     price: price,
     imageUrl: imageUrl,
-    UserId: req.user.id,
   })
     .then((result) => {
       res.redirect("/admin/products");
@@ -53,8 +52,9 @@ module.exports.getEditProduct = (req, res, next) => {
     return res.redirect("/");
   }
   const productId = req.params.productId;
-  Product.findByPk(productId)
-    .then((product) => {
+  req.user.getProducts({where: {id: productId}})
+    .then((products) => {
+      const product = products[0];
       if (!product) {
         return res.redirect("/");
       }
@@ -110,7 +110,7 @@ module.exports.postEditProduct = (req, res, next) => {
  * @param {Function} next - Express next middleware function
  */
 module.exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  req.user.getProducts()
     .then((products) => {
       res.render("admin/products", {
         products_list: products,
