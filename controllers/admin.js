@@ -1,4 +1,4 @@
-const Product = require('../models/product')
+const Product = require("../models/product");
 
 /**
  * Renders the add product page.
@@ -8,16 +8,13 @@ const Product = require('../models/product')
  * @param {Function} next - Express next middleware function
  */
 
-
 module.exports.getAddProduct = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
-    editing: false
+    editing: false,
   });
 };
-
-
 
 /**
  * Creates a new product based on request body data.
@@ -35,6 +32,7 @@ module.exports.postAddProduct = (req, res) => {
     description: description,
     price: price,
     imageUrl: imageUrl,
+    UserId: req.user.id,
   })
     .then((result) => {
       res.redirect("/admin/products");
@@ -44,8 +42,7 @@ module.exports.postAddProduct = (req, res) => {
     });
 };
 
-
-    /**
+/**
  * Renders the edit product page if edit mode is enabled.
  * Looks up the product by ID, and renders the edit page with the product data.
  * Redirects to homepage if edit mode is not enabled or product not found.
@@ -144,5 +141,4 @@ module.exports.postDeleteProduct = (req, res, next) => {
       res.redirect("/admin/products");
     })
     .catch((err) => {});
-}
-
+};
