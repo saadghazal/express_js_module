@@ -136,17 +136,18 @@ module.exports.postOrder = (req, res, next) => {
   })
   .catch(err => console.log(err));
 }
-// module.exports.getCheckout = (req, res, next) => {
-//   res.render("shop/checkout", {
-//     path: "/checkout",
-//     pageTitle: "Checkout",
-//   });
-// };
+
 module.exports.getOrders = (req, res, next) => {
-  res.render("shop/orders", {
-    path: "/orders",
-    pageTitle: "Your Orders",
-  });
+  req.user.getOrders({include: ['Products']})
+  .then(orders => {
+
+    res.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "Your Orders",
+      orders: orders,
+    })
+  })
+   
 };
 /**
  * Deletes a product from the user's cart.
