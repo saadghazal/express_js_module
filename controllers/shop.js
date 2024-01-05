@@ -1,6 +1,5 @@
 const Product = require("../models/product");
-const Cart = require("../models/cart");
-const CartItem = require("../models/cart-item");
+
 
 
 module.exports.getProducts = (req, res, next) => {
@@ -98,7 +97,7 @@ module.exports.postCart = (req, res, next) => {
         newQuantity = oldQuantity + 1;
         return product;
       }
-      return Product.findById(prodId);
+      return Product.findByPk(prodId);
     })
     .then(product => {
       return fetchedCart.addProduct(product, {
@@ -111,12 +110,32 @@ module.exports.postCart = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-module.exports.getCheckout = (req, res, next) => {
-  res.render("shop/checkout", {
-    path: "/checkout",
-    pageTitle: "Checkout",
-  });
-};
+module.exports.postOrder = (req, res, next) => {
+  req.user.getCart()
+  .then(cart => {
+    return cart.getProducts()
+  })
+  .then(products => {
+    return req.user.createOrder()
+    .then(order => {
+      return order.addProducts(products.map(product => {
+        product.OrderItem = { quantity: product.CartItem.quantity }
+        return product
+      }))
+    })
+    .catch(err => console.log(err));
+  })
+  .then(result => {
+    res.redirect("/orders");
+  })
+  .catch(err => console.log(err));
+}
+// module.exports.getCheckout = (req, res, next) => {
+//   res.render("shop/checkout", {
+//     path: "/checkout",
+//     pageTitle: "Checkout",
+//   });
+// };
 module.exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
     path: "/orders",
