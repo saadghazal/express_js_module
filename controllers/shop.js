@@ -111,8 +111,10 @@ module.exports.postCart = (req, res, next) => {
 };
 
 module.exports.postOrder = (req, res, next) => {
+  let fetchedCart;
   req.user.getCart()
   .then(cart => {
+    fetchedCart = cart;
     return cart.getProducts()
   })
   .then(products => {
@@ -126,7 +128,11 @@ module.exports.postOrder = (req, res, next) => {
     .catch(err => console.log(err));
   })
   .then(result => {
+    return fetchedCart.setProducts(null);
+  })
+  .then(result =>{
     res.redirect("/orders");
+
   })
   .catch(err => console.log(err));
 }
@@ -155,7 +161,7 @@ module.exports.getOrders = (req, res, next) => {
  * Finally, a response is sent to redirect to the /cart route.
  */
 module.exports.postCartDeleteProduct = (req, res, next) => {
-  const productId = req.body.productId;
+  const productId = req.body.productId; 
   req.user
     .getCart()
     .then((cart) => {
@@ -166,6 +172,7 @@ module.exports.postCartDeleteProduct = (req, res, next) => {
       return product.CartItem.destroy({ where: { productId: productId } });
     })
     .then((result) => {
+      
       res.redirect("/cart");
     })
     .catch((err) => console.log(err));
