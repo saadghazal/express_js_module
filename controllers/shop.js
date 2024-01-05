@@ -47,28 +47,30 @@ module.exports.getIndex = (req, res, next) => {
   
 };
 
+/**
+ * Gets the user's cart and renders the cart page.
+ *
+ * Fetches the user's cart, gets the products in the cart, and renders the cart page.
+ * Renders the cart page with the cart products and cart page details.
+ * Handles any errors by logging to console.
+ */
 module.exports.getCart = (req, res, next) => {
-  Cart.getCart((cart) => {
-    Product.fetchAll((products) => {
-      const cartProducts = [];
-      products.forEach((product) => {
-        const cartProduct = cart.products.find((prod) => prod.id == product.id);
-        // if the product is in the cart, add it to the cartProducts array
-        if (cartProduct) {
-          cartProducts.push({
-            productData: product,
-            quantity: cartProduct.quantity,
-          });
-        }
-      });
-      console.log(cartProducts);
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts();
+    })
+    .then((products) => {
+      console.log(products);
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
-        products: cartProducts,
+        products: products,
       });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 module.exports.postCart = (req, res, next) => {

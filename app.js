@@ -91,7 +91,10 @@ sequelize
     return Promise.resolve(user);
   })
   .then((user) => {
+    return user.createCart();
+  }).then((cart) => {
     app.listen(3000);
+
   })
   .catch((err) => {
     console.log(err);
