@@ -21,7 +21,7 @@ Allows us to tell express where to find these dynamic views
 
 */
 
-// const adminRouter = require("./routes/admin");
+const adminRouter = require("./routes/admin");
 // const shopRouter = require("./routes/shop");
 
 
@@ -42,15 +42,15 @@ app.use(express.static(path.join(__dirname, "public"))); // it will access stati
 //     });
 // });
 
-// app.use("/admin", adminRouter);
+app.use("/admin", adminRouter);
 
 // app.use(shopRouter);
 
 app.use(errorController.error404);
 
 
-mongoConnect(client =>{
-  console.log(client);
+mongoConnect(() =>{
+  
   app.listen(3000, () => {
     console.log("Server is running on port 3000");
   });
