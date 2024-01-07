@@ -22,7 +22,7 @@ Allows us to tell express where to find these dynamic views
 */
 
 const adminRouter = require("./routes/admin");
-// const shopRouter = require("./routes/shop");
+const shopRouter = require("./routes/shop");
 
 
 //it register a middleware it will parse the incoming requests bodies
@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, "public"))); // it will access stati
 
 app.use("/admin", adminRouter);
 
-// app.use(shopRouter);
+app.use(shopRouter);
 
 app.use(errorController.error404);
 

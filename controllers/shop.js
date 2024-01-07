@@ -4,7 +4,7 @@ const Product = require("../models/product");
 
 module.exports.getProducts = (req, res, next) => {
 
-  Product.findAll()
+  Product.fetchAll()
     .then(products => {
       res.render("shop/product-list", {
         products_list: products,
@@ -18,11 +18,22 @@ module.exports.getProducts = (req, res, next) => {
    
 };
 
-
+module.exports.getIndex = (req, res, next) => {
+  Product.fetchAll().then(products => {
+    res.render("shop/index", {
+      products_list: products,
+      pageTitle: "Shop",
+      path: "/",
+    });
+  }).catch(err => {
+    console.log(err)
+  })
+  
+};
 
 module.exports.getProduct = (req, res, next) => {
   const productId = req.params.productId;
-  Product.findByPk(productId)
+  Product.findById(productId)
     .then(product => {
       res.render("shop/product-detail", {
         product: product,
@@ -34,18 +45,7 @@ module.exports.getProduct = (req, res, next) => {
       console.log(err);
     });
 };
-module.exports.getIndex = (req, res, next) => {
-  Product.findAll().then(products => {
-    res.render("shop/index", {
-      products_list: products,
-      pageTitle: "Shop",
-      path: "/",
-    });
-  }).catch(err => {
-    console.log(err)
-  })
-  
-};
+
 
 /**
  * Gets the user's cart and renders the cart page.

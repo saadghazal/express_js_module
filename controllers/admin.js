@@ -27,7 +27,7 @@ module.exports.postAddProduct = (req, res) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product( title, imageUrl, price, description );
+  const product = new Product( title, price, imageUrl, description );
   product.save().then(result =>{
     // console.log(result);
     res.redirect("/admin/products");
