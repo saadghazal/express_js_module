@@ -1,6 +1,6 @@
 {
-    "debug.javascript.autoAttachFilter": "disabled",
+    // "debug.javascript.autoAttachFilter": "disabled",
     "npm-intellisense.packageSubfoldersIntellisense": true,
-    "npm-intellisense.scanDevDependencies": true,
-    "npm-intellisense.showBuildInLibs": true
+    // "npm-intellisense.scanDevDependencies": true,
+    // "npm-intellisense.showBuildInLibs": true
 }
